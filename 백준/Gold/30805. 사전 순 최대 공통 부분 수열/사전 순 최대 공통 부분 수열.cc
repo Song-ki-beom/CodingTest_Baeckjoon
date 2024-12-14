@@ -7,24 +7,9 @@
 #define MAX 101
 using namespace std;
 int N, M;
-struct line
-{
-	int start;
-	int num;
-};
 
-bool compLine(line a, line b)
-{
-	if (a.num > b.num)
-		return true;
-	else if (a.num == b.num)
-		return a.start < b.start;
-	else
-		return false;
-}
 vector<queue<int>> A;
 vector<queue<int>> B;
-vector<line> sortedLine;
 
 int main()
 {
@@ -35,6 +20,8 @@ int main()
 	A.assign(MAX, queue<int>());
 	B.assign(MAX, queue<int>());
 
+
+	//입력 부분
 	for (int i = 1; i <= N; i++)
 	{
 		cin >> temp;
@@ -47,6 +34,8 @@ int main()
 		B[temp].push(j);
 	}
 
+
+	// 비교 Start
 	int limitStart = -1;
 	int limitEnd = -1;
 	vector<int> answer;
@@ -75,6 +64,8 @@ int main()
 		}
 	}
 	
+
+	//출력 부분
 	if (answer.empty())
 	{
 		cout << 0;
