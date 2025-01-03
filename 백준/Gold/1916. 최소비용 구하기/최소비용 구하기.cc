@@ -2,60 +2,71 @@
 #include <iostream>
 #include <queue>
 #include <algorithm>
-#define MAX 1000000001
+#include <string>
+#include <map>
+#include <stack>
+#include <climits>
+#define MAX 1001
+#define DISTMAX 100000001
 using namespace std;
 
 int N, M;
-vector<vector<pair<int,int>>> Bank;
-vector<int> Shortest;
+ int DP[MAX];
+vector<vector<pair<int,int>>> Arr;
 
-void DaikStra(int start)
+
+
+int DaikStra(int start , int end)
 {
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    pq.push({ 0, start }); 
-    Shortest[start] = 0;
+	
 
-    while (!pq.empty())
-    {
-        int curDist = pq.top().first;
-        int curNode = pq.top().second;
-        pq.pop();
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+	DP[start] = 0;
+	pq.push({ start,0 });
+	while (!pq.empty())
+	{
+		int curNode = pq.top().first;
+		int curCost = pq.top().second;
+		pq.pop();
 
-        if (curDist > Shortest[curNode]) continue;
+		if (curCost > DP[curNode]) continue;
 
-        for (pair<int,int> nearEdge : Bank[curNode])
-        {
-            int nextDist = nearEdge.first;
-            int nextNode = nearEdge.second;
-            if (Shortest[nextNode] > curDist + nextDist)
-            {
-                Shortest[nextNode] = curDist + nextDist;
-                pq.push({ Shortest[nextNode], nextNode });
-            }
-        }
-    }
+		for (pair<int,int> Edge : Arr[curNode])
+		{
+			if (DP[Edge.first] > DP[curNode] + Edge.second)
+			{
+				DP[Edge.first] = DP[curNode] + Edge.second;
+				pq.push({Edge.first,DP[Edge.first]});
+			}
+		}
+
+	}
+
+	return DP[end];
 }
-
 int main()
 {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    cin >> N >> M;
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+	cin >> N >> M;
+	std::fill(DP, DP+MAX, DISTMAX);
+	Arr.assign(N+1, vector<pair<int,int>>());
+	
+	int from, to;
+	int cost;
 
-    int a, b, dist;
-    Shortest.assign(N + 1, MAX);
-    Bank.assign(N + 1, vector<pair<int,int>>());
+	for (int i = 0; i < M; i++)
+	{
+		cin >> from >> to >> cost;
+		Arr[from].push_back({to,cost});
+	}
 
-    for (int i = 0; i < M; i++)
-    {
-        cin >> a >> b >> dist;
-        Bank[a].push_back({ dist,b });
-    }
+	int start, end;
+	cin >> start >> end;
+	cout << DaikStra(start, end);
 
-    int A, B;
-    cin >> A >> B;
 
-    DaikStra(A);
-	cout << Shortest[B];
 }
+
 
