@@ -56,11 +56,7 @@ int main() {
         DP[i] += BackWise.size();
     }
 
-    int answer = -1;
-    for (int curMax : DP)
-    {
-        if (answer < curMax) answer = curMax;
-    }
+    int answer = *max_element(DP, DP+MAX);
 
     if (answer - 1 >= 0)
         cout << answer - 1;
